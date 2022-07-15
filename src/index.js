@@ -1,4 +1,4 @@
-// import { $fxEventBus } from '../../common/eventBus/index.js'
+import { $fxEventBus } from 'wind-eventbus-miniprogram'
 const {
 	weightTypeTools,
 	weightReg,
@@ -52,11 +52,11 @@ class WeightApi {
 		const { deviceId, deviceName } = getDeviceCache()
 		if (deviceId) {
 			this.connectionWeight(deviceId, deviceName, false).then(() => {
-				// $fxEventBus.emit('weightConnect', {
-				// 	deviceId,
-				// 	deviceName,
-				// 	connected: true
-				// })
+				$fxEventBus.emit('weightConnect', {
+					deviceId,
+					deviceName,
+					connected: true
+				})
 			})
 		}
 	}
@@ -360,9 +360,9 @@ class WeightApi {
 			if (res.deviceId === this.deviceId && !res.connected) {
 				this.deviceName = ''
 				this.deviceId = ''
-				// $fxEventBus.emit('weightConnect', {
-				// 	connected: false
-				// })
+				$fxEventBus.emit('weightConnect', {
+					connected: false
+				})
 			}
 		})
 	}
