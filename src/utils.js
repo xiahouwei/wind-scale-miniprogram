@@ -1,7 +1,7 @@
 const weightReg = /^BR/
 const tareCapitalLetter = 'T'
 const zeroCapitalLetter = 'Z'
-const debugFlag = true
+let debugFlag = true
 const actionCode = {
 	tare: 'BJ01',
 	zero: 'BJ02'
@@ -152,8 +152,11 @@ const debug = function () {
 	}
 }
 
+const setDebugFlag = function (flag) {
+	debugFlag = flag
+}
+
 const setDeviceCache = function (deviceId, deviceName) {
-	console.log(deviceId, deviceName)
 	wx.setStorageSync('fx-device', `${deviceId}$$${deviceName}`)
 }
 
@@ -182,6 +185,7 @@ module.exports = {
 	tareBuffer: str2buffer(actionCode.tare),
 	zeroBuffer: str2buffer(actionCode.zero),
 	debug,
+	setDebugFlag,
 	setDeviceCache,
 	getDeviceCache,
 	noop

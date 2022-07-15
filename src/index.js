@@ -1,4 +1,4 @@
-import { $fxEventBus } from 'wind-eventbus-miniprogram'
+import { $fxCreateEventBus } from 'wind-eventbus-miniprogram'
 const {
 	weightTypeTools,
 	weightReg,
@@ -7,10 +7,13 @@ const {
 	tareBuffer,
 	zeroBuffer,
 	debug,
+	setDebugFlag,
 	setDeviceCache,
 	getDeviceCache,
 	noop
 } = require('./utils')
+
+const $fxScaleEventBus = $fxCreateEventBus()
 class WeightApi {
 	constructor () {
 		this.ready = null
@@ -52,7 +55,7 @@ class WeightApi {
 		const { deviceId, deviceName } = getDeviceCache()
 		if (deviceId) {
 			this.connectionWeight(deviceId, deviceName, false).then(() => {
-				$fxEventBus.emit('weightConnect', {
+				$fxScaleEventBus.emit('weightConnect', {
 					deviceId,
 					deviceName,
 					connected: true
@@ -286,7 +289,7 @@ class WeightApi {
 		}
 	}
 
-	// 设置去皮指令
+	// 发送去皮指令
 	sendTareCode () {
 		return new Promise(resolve => {
 			if (!this.writeCharacteristicId) {
@@ -311,7 +314,7 @@ class WeightApi {
 		})
 	}
 
-	// 设置指令指令
+	// 发送置零指令
 	sendZeroCode () {
 		return new Promise(resolve => {
 			if (!this.writeCharacteristicId) {
@@ -360,7 +363,7 @@ class WeightApi {
 			if (res.deviceId === this.deviceId && !res.connected) {
 				this.deviceName = ''
 				this.deviceId = ''
-				$fxEventBus.emit('weightConnect', {
+				$fxScaleEventBus.emit('weightConnect', {
 					connected: false
 				})
 			}
@@ -377,6 +380,16 @@ class WeightApi {
 				}
 			})
 		})
+	}
+
+	// 订阅电子秤连接状态变更信息
+	notifyWeightConnectStateChange = (context, fn) => {
+		$fxScaleEventBus.on('weightConnect', context, fn)
+	}
+
+	// 开启调试
+	openDebug () {
+		setDebugFlag(true)
 	}
 }
 module.exports = {
