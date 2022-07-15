@@ -1,8 +1,8 @@
 {
   "name": "wind-scale-miniprogram",
-  "version": "1.0.1",
+  "version": "1.0.3",
   "description": "一个用于微信小程序的电子秤核心包",
-  "main": ".scale.min.js",
+  "main": "scale.min.js",
   "scripts": {
     "build": "npm run lint && rollup --config",
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -20,7 +20,9 @@
     "url": "https://github.com/xiahouwei/wind-scale-miniprogram.git"
   },
   "homepage": "https://github.com/xiahouwei/wind-scale-miniprogram#readme",
-  "dependencies": {},
+  "dependencies": {
+    "wind-eventbus-miniprogram": "^1.0.7"
+  },
   "devDependencies": {
     "@babel/core": "^7.18.6",
     "@babel/eslint-parser": "^7.5.4",
@@ -43,7 +45,6 @@
     "rollup": "^2.76.0",
     "rollup-plugin-babel": "^4.4.0",
     "rollup-plugin-json": "^4.0.0",
-    "rollup-plugin-terser": "^7.0.2",
-    "wind-eventbus-miniprogram": "^1.0.7"
+    "rollup-plugin-terser": "^7.0.2"
   }
 }
