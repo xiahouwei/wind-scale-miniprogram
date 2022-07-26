@@ -9,11 +9,11 @@ const {
 	debug,
 	setDebugFlag,
 	setDeviceCache,
-	getDeviceCache,
 	noop
 } = require('./utils')
 
-const $fxScaleEventBus = $fxCreateEventBus()
+const $fxWeightEventBus = $fxCreateEventBus()
+
 class WeightApi {
 	constructor () {
 		this.ready = null
@@ -31,7 +31,6 @@ class WeightApi {
 	init () {
 		return new Promise(resolve => {
 			debug('开启蓝牙模块')
-			this.onBLEConnectionStateChange()
 			if (this.ready) {
 				resolve(this.ready)
 			} else {
@@ -48,20 +47,6 @@ class WeightApi {
 				})
 			}
 		})
-	}
-
-	// 静默连接
-	silentConnect = () => {
-		const { deviceId, deviceName } = getDeviceCache()
-		if (deviceId) {
-			this.connectionWeight(deviceId, deviceName, false).then(() => {
-				$fxScaleEventBus.emit('weightConnect', {
-					deviceId,
-					deviceName,
-					connected: true
-				})
-			})
-		}
 	}
 
 	// 扫描电子秤
@@ -358,16 +343,14 @@ class WeightApi {
 	}
 
 	// 监听电子秤连接状态
-	onBLEConnectionStateChange = () => {
-		wx.onBLEConnectionStateChange((res) => {
-			if (res.deviceId === this.deviceId && !res.connected) {
-				this.deviceName = ''
-				this.deviceId = ''
-				$fxScaleEventBus.emit('weightConnect', {
-					connected: false
-				})
-			}
-		})
+	doBLEConnectionStateChange = (res) => {
+		if (res.deviceId === this.deviceId && !res.connected) {
+			this.deviceName = ''
+			this.deviceId = ''
+			$fxWeightEventBus.emit('weightConnect', {
+				connected: false
+			})
+		}
 	}
 
 	// 断开电子称的连接
@@ -382,14 +365,32 @@ class WeightApi {
 		})
 	}
 
+	// 判断是否是电子秤
+	isWeight (name) {
+		return name && weightReg.test(name)
+	}
+
 	// 订阅电子秤连接状态变更信息
-	notifyWeightConnectStateChange = (context, fn) => {
-		$fxScaleEventBus.on('weightConnect', context, fn)
+	onWeightConnectChange = (context, fn) => {
+		$fxWeightEventBus.on('weightConnect', context, fn)
+	}
+
+	// 取消订阅电子秤连接状态变更信息
+	offWeightConnectChange = (context) => {
+		$fxWeightEventBus.remove('weightConnect', context)
 	}
 
 	// 开启调试
 	openDebug () {
 		setDebugFlag(true)
+	}
+
+	// 创建蓝牙电子秤对象
+	createDeviceObj (name, deviceId) {
+		return {
+			name,
+			deviceId
+		}
 	}
 }
 module.exports = {
