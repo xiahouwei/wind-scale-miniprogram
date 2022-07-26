@@ -1,6 +1,6 @@
 {
   "name": "wind-scale-miniprogram",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "一个用于微信小程序的电子秤核心包",
   "main": "scale.min.js",
   "scripts": {

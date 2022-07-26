@@ -1,4 +1,4 @@
-import { $fxCreateEventBus } from 'wind-eventbus-miniprogram'
+const eventbus = require('wind-eventbus-miniprogram')
 const {
 	weightTypeTools,
 	weightReg,
@@ -12,7 +12,7 @@ const {
 	noop
 } = require('./utils')
 
-const $fxWeightEventBus = $fxCreateEventBus()
+const $fxWeightEventBus = eventbus.$fxCreateEventBus()
 
 class WeightApi {
 	constructor () {
