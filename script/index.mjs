@@ -6,10 +6,12 @@ import { dirname } from 'path'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
-function resolve (dir) {
+const resolve =  dir => {
 	return path.join(__dirname, dir)
 }
-
+const createCommitMsg = () => {
+	return `task:同步更新 ${new Date().toDateString()}`
+}
 const filterFunc = src => {
 	return !/node_modules$|.git$|package-lock.json$|.DS_Store$/.test(src)
 }
@@ -26,7 +28,7 @@ try {
 		cwd: targeCwd,
 		stdio: ['inherit', 'inherit', 'inherit']
 	})
-	await execa('git', ['commit', '-m', 'task:upload'], {
+	await execa('git', ['commit', '-m', createCommitMsg()], {
 		cwd: targeCwd,
 		stdio: ['inherit', 'inherit', 'inherit']
 	})
